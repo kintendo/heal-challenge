@@ -20841,6 +20841,7 @@ var connect = _require.connect;
 
 var actions = require('./lib/actions');
 var autoBind = require('react-autobind');
+var Parent = require('./components/Parent');
 
 var App = function (_Component) {
   _inherits(App, _Component);
@@ -20854,13 +20855,27 @@ var App = function (_Component) {
     return _this;
   }
 
+  /* object root {
+    child: null
+  }
+  */
+
   _createClass(App, [{
     key: 'render',
     value: function render() {
-      React.createElement(
+      return React.createElement(
         'div',
         null,
-        'Hello, world!'
+        React.createElement(
+          'div',
+          { className: 'logo-wrapper' },
+          React.createElement('img', { src: '../img/heal_logo_clear.png' })
+        ),
+        React.createElement(
+          'div',
+          { className: 'container-area' },
+          React.createElement(Parent, { children: 2 })
+        )
       );
     }
   }]);
@@ -20879,7 +20894,84 @@ App.propTypes = {
 };
 module.exports = connect(mapStateToProps, actions)(App);
 
-},{"./lib/actions":188,"react":175,"react-autobind":37,"react-redux":42}],188:[function(require,module,exports){
+},{"./components/Parent":189,"./lib/actions":190,"react":175,"react-autobind":37,"react-redux":42}],188:[function(require,module,exports){
+'use strict';
+
+var React = require('react');
+
+function Child() {
+  return React.createElement('div', { className: 'child' });
+}
+module.exports = Child;
+
+},{"react":175}],189:[function(require,module,exports){
+'use strict';
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var React = require('react');
+var Component = React.Component;
+var PropTypes = React.PropTypes;
+
+var autoBind = require('react-autobind');
+var Child = require('./Child');
+
+var Parent = function (_Component) {
+  _inherits(Parent, _Component);
+
+  function Parent(props) {
+    _classCallCheck(this, Parent);
+
+    var _this = _possibleConstructorReturn(this, (Parent.__proto__ || Object.getPrototypeOf(Parent)).call(this, props));
+
+    autoBind(_this);
+    return _this;
+  }
+
+  _createClass(Parent, [{
+    key: 'renderChildren',
+    value: function renderChildren(numOfChildren) {
+      var children = [];
+      for (var i = 0; i < numOfChildren; i++) {
+        children.push(React.createElement(Child, { key: 'child-' + i }));
+      }
+      return children;
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _props = this.props;
+      var children = _props.children;
+      var isHorizontal = _props.isHorizontal;
+
+      return React.createElement(
+        'div',
+        { className: 'parent ' + (isHorizontal ? 'horizontal' : '') },
+        this.renderChildren(this.props.children)
+      );
+    }
+  }]);
+
+  return Parent;
+}(Component);
+
+Parent.propTypes = {
+  children: PropTypes.number,
+  isHorizontal: PropTypes.bool
+};
+Parent.defaultProps = {
+  chilren: 0,
+  isHorizontal: false
+};
+module.exports = Parent;
+
+},{"./Child":188,"react":175,"react-autobind":37}],190:[function(require,module,exports){
 'use strict';
 
 // app reducer
@@ -20892,7 +20984,7 @@ module.exports = {
   setStatus: setStatus
 };
 
-},{}],189:[function(require,module,exports){
+},{}],191:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -20907,14 +20999,14 @@ var App = require('./app.js');
 var elm = document.getElementById('app');
 
 if (elm) {
-    ReactDOM.render(React.createElement(
-        Provider,
-        { store: AppStore },
-        React.createElement(App, null)
-    ), elm);
+  ReactDOM.render(React.createElement(
+    Provider,
+    { store: AppStore },
+    React.createElement(App, null)
+  ), elm);
 }
 
-},{"./app.js":187,"./stores/AppStore":190,"react":175,"react-dom":39,"react-redux":42}],190:[function(require,module,exports){
+},{"./app.js":187,"./stores/AppStore":192,"react":175,"react-dom":39,"react-redux":42}],192:[function(require,module,exports){
 'use strict';
 
 var _require = require('redux');
@@ -20937,7 +21029,7 @@ var AppStore = createStore(AppReducer, compose(applyMiddleware(thunk), window &&
 
 module.exports = AppStore;
 
-},{"./reducers/AppReducer":191,"redux":182,"redux-thunk":176}],191:[function(require,module,exports){
+},{"./reducers/AppReducer":193,"redux":182,"redux-thunk":176}],193:[function(require,module,exports){
 'use strict';
 
 var assign = require('object-assign');
@@ -20958,7 +21050,7 @@ function appReducer() {
       return state;
   }
 }
-
+// []
 module.exports = appReducer;
 
-},{"object-assign":35}]},{},[189]);
+},{"object-assign":35}]},{},[191]);

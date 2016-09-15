@@ -8,3 +8,41 @@ body {
   background-color: $blue;
   color: white;
 }
+
+.logo-wrapper {
+  padding-top: 80px;
+  @include flexbox;
+  @include flex-direction(row);
+  @include justify-content(center);
+  img {
+    max-width: 180px;
+    max-height: 50px;
+  }
+}
+
+.container-area {
+  margin-top: 40px;
+  margin-bottom:40px;
+  width: 50vh;
+  height: 50vh;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.parent {
+  border: 1px solid white;
+  height: 100%;
+  width: 100%;
+  @include flexbox;
+  @include justify-content(center);
+  @include align-items(center);
+  &.horizontal {
+    @include flex-direction(column);
+  }
+}
+
+.child {
+  border: 1px solid white;
+  height: 98%;
+  width: 98%;
+}

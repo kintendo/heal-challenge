@@ -5,6 +5,7 @@ const {Component, PropTypes} = React;
 const {connect} = require('react-redux');
 const actions = require('./lib/actions');
 const autoBind = require('react-autobind');
+const Parent = require('./components/Parent');
 
 class App extends Component {
   constructor(props) {
@@ -12,8 +13,20 @@ class App extends Component {
       autoBind(this);
   }
 
+  /* object root {
+    child: null
+  }
+  */
+
   render() {
-    <div>Hello, world!</div>
+    return (
+      <div>
+        <div className='logo-wrapper'><img src='../img/heal_logo_clear.png' /></div>
+        <div className='container-area'>
+          <Parent children={2} />
+        </div>
+      </div>
+    );
   }
 }
 

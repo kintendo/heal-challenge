@@ -7,7 +7,7 @@ const App = require('./app.js');
 const elm = document.getElementById('app');
 
 if (elm) {
-    ReactDOM.render(
-        <Provider store={AppStore}><App /></Provider>
-    , elm);
+  ReactDOM.render(
+    <Provider store={AppStore}><App /></Provider>
+  , elm);
 }
