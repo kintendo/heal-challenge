@@ -20,6 +20,12 @@ body {
   }
 }
 
+.button-group {
+  @include flexbox;
+  @include flex-direction(row);
+  @include justify-content(center);
+}
+
 .container-area {
   margin-top: 40px;
   margin-bottom:40px;
@@ -39,10 +45,16 @@ body {
   &.horizontal {
     @include flex-direction(column);
   }
+  &.selected {
+    border-color: $red;
+  }
 }
 
 .child {
   border: 1px solid white;
   height: 98%;
   width: 98%;
+  &.selected {
+    border-color: $red;
+  }
 }

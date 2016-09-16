@@ -20841,7 +20841,7 @@ var connect = _require.connect;
 
 var actions = require('./lib/actions');
 var autoBind = require('react-autobind');
-var Parent = require('./components/Parent');
+var Child = require('./components/Child');
 
 var App = function (_Component) {
   _inherits(App, _Component);
@@ -20855,14 +20855,39 @@ var App = function (_Component) {
     return _this;
   }
 
-  /* object root {
-    child: null
-  }
-  */
-
   _createClass(App, [{
+    key: 'buildContainer',
+    value: function buildContainer(container) {
+      var _this2 = this;
+
+      var _props = this.props;
+      var containers = _props.containers;
+      var selectedIndex = _props.selectedIndex;
+
+      if (container && container.type === 'child') {
+        return React.createElement(Child, { key: 'child-' + container.id, className: '' + (container.id === selectedIndex ? 'selected' : '') });
+      } else if (container && container.type === 'parent') {
+        return React.createElement(
+          'div',
+          { key: 'parent-' + container.id, className: 'parent ' + (container.isHorizontal ? 'horizontal' : '') + ' ' + (container.id === selectedIndex ? 'selected' : '') },
+          container.children.map(function (child) {
+            if (containers[child]) return _this2.buildContainer(containers[child]);
+          })
+        );
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _props2 = this.props;
+      var containers = _props2.containers;
+      var selectedIndex = _props2.selectedIndex;
+      var setSelectedIndex = _props2.setSelectedIndex;
+      var addContainer = _props2.addContainer;
+      var changeOrientation = _props2.changeOrientation;
+
+
+      var root = this.props.containers[0];
       return React.createElement(
         'div',
         null,
@@ -20874,7 +20899,39 @@ var App = function (_Component) {
         React.createElement(
           'div',
           { className: 'container-area' },
-          React.createElement(Parent, { children: 2 })
+          this.buildContainer(root)
+        ),
+        React.createElement(
+          'div',
+          null,
+          React.createElement(
+            'div',
+            { className: 'button-group' },
+            React.createElement(
+              'button',
+              { onClick: setSelectedIndex.bind(null, selectedIndex - 1) },
+              'Previous'
+            ),
+            React.createElement(
+              'button',
+              { onClick: setSelectedIndex.bind(null, selectedIndex + 1) },
+              'Next'
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'button-group' },
+            React.createElement(
+              'button',
+              { onClick: addContainer.bind(null, selectedIndex) },
+              'Add Container'
+            ),
+            React.createElement(
+              'button',
+              { onClick: changeOrientation.bind(null, selectedIndex) },
+              'Change Orientation'
+            )
+          )
         )
       );
     }
@@ -20885,93 +20942,32 @@ var App = function (_Component) {
 
 function mapStateToProps(state) {
   return {
-    status: state.appData.status
+    containers: state.appData.containers,
+    selectedIndex: state.appData.selectedIndex
   };
 }
 App.propTypes = {
   status: PropTypes.string,
-  setStatus: PropTypes.func
+  setStatus: PropTypes.func,
+  setSelectedIndex: PropTypes.func,
+  addContainer: PropTypes.func,
+  changeOrientation: PropTypes.func
 };
 module.exports = connect(mapStateToProps, actions)(App);
 
-},{"./components/Parent":189,"./lib/actions":190,"react":175,"react-autobind":37,"react-redux":42}],188:[function(require,module,exports){
+},{"./components/Child":188,"./lib/actions":189,"react":175,"react-autobind":37,"react-redux":42}],188:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
 
-function Child() {
-  return React.createElement('div', { className: 'child' });
+function Child(_ref) {
+  var className = _ref.className;
+
+  return React.createElement('div', { className: 'child ' + (className || '') });
 }
 module.exports = Child;
 
 },{"react":175}],189:[function(require,module,exports){
-'use strict';
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var React = require('react');
-var Component = React.Component;
-var PropTypes = React.PropTypes;
-
-var autoBind = require('react-autobind');
-var Child = require('./Child');
-
-var Parent = function (_Component) {
-  _inherits(Parent, _Component);
-
-  function Parent(props) {
-    _classCallCheck(this, Parent);
-
-    var _this = _possibleConstructorReturn(this, (Parent.__proto__ || Object.getPrototypeOf(Parent)).call(this, props));
-
-    autoBind(_this);
-    return _this;
-  }
-
-  _createClass(Parent, [{
-    key: 'renderChildren',
-    value: function renderChildren(numOfChildren) {
-      var children = [];
-      for (var i = 0; i < numOfChildren; i++) {
-        children.push(React.createElement(Child, { key: 'child-' + i }));
-      }
-      return children;
-    }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _props = this.props;
-      var children = _props.children;
-      var isHorizontal = _props.isHorizontal;
-
-      return React.createElement(
-        'div',
-        { className: 'parent ' + (isHorizontal ? 'horizontal' : '') },
-        this.renderChildren(this.props.children)
-      );
-    }
-  }]);
-
-  return Parent;
-}(Component);
-
-Parent.propTypes = {
-  children: PropTypes.number,
-  isHorizontal: PropTypes.bool
-};
-Parent.defaultProps = {
-  chilren: 0,
-  isHorizontal: false
-};
-module.exports = Parent;
-
-},{"./Child":188,"react":175,"react-autobind":37}],190:[function(require,module,exports){
 'use strict';
 
 // app reducer
@@ -20980,11 +20976,23 @@ function setStatus(status) {
   return { type: 'SET_STATUS', status: status };
 }
 
+function addContainer(target) {
+  return { type: 'ADD_CONTAINER', target: target };
+}
+
+function changeOrientation(target) {
+  return { type: 'CHANGE_ORIENTATION', target: target };
+}
+
+function setSelectedIndex(selectedIndex) {
+  return { type: 'SET_SELECTED_INDEX', selectedIndex: selectedIndex };
+}
+
 module.exports = {
-  setStatus: setStatus
+  setStatus: setStatus, addContainer: addContainer, changeOrientation: changeOrientation, setSelectedIndex: setSelectedIndex
 };
 
-},{}],191:[function(require,module,exports){
+},{}],190:[function(require,module,exports){
 'use strict';
 
 var React = require('react');
@@ -21006,7 +21014,7 @@ if (elm) {
   ), elm);
 }
 
-},{"./app.js":187,"./stores/AppStore":192,"react":175,"react-dom":39,"react-redux":42}],192:[function(require,module,exports){
+},{"./app.js":187,"./stores/AppStore":191,"react":175,"react-dom":39,"react-redux":42}],191:[function(require,module,exports){
 'use strict';
 
 var _require = require('redux');
@@ -21029,12 +21037,19 @@ var AppStore = createStore(AppReducer, compose(applyMiddleware(thunk), window &&
 
 module.exports = AppStore;
 
-},{"./reducers/AppReducer":193,"redux":182,"redux-thunk":176}],193:[function(require,module,exports){
+},{"./reducers/AppReducer":192,"redux":182,"redux-thunk":176}],192:[function(require,module,exports){
 'use strict';
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var assign = require('object-assign');
 var initialState = {
-  status: ''
+  containers: { 0: { id: 0, type: 'child' } },
+  index: 1,
+  selectedIndex: 0,
+  rootIndex: 0
 };
 
 function appReducer() {
@@ -21042,15 +21057,51 @@ function appReducer() {
   var action = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
   switch (action.type) {
-    case 'SET_STATUS':
+    case 'ADD_CONTAINER':
+      var target = state.containers[action.target] || {};
+      if (target && target.type === 'child') {
+        var _assign;
+
+        return assign({}, state, {
+          index: state.index + 2,
+          containers: assign({}, state.containers, (_assign = {}, _defineProperty(_assign, state.index, { id: state.index, type: 'child', children: [] }), _defineProperty(_assign, state.index + 1, assign({}, target, { id: state.index + 1 })), _defineProperty(_assign, action.target, assign({}, target, { type: 'parent', children: [state.index, state.index + 1] })), _assign))
+        });
+      } else if (target && target.type === 'parent') {
+        var _assign2;
+
+        var children = target.children || [];
+        return assign({}, state, {
+          index: state.index + 1,
+          containers: assign({}, state.containers, (_assign2 = {}, _defineProperty(_assign2, state.index, { id: state.index, type: 'child', children: [], isHorizontal: action.isHorizontal }), _defineProperty(_assign2, action.target, assign({}, target, { children: [].concat(_toConsumableArray(children), [state.index]), isHorizontal: action.isHorizontal })), _assign2))
+        });
+      }
+    case 'CHANGE_ORIENTATION':
+      var flipTarget = state.containers[action.target] || null;
+      if (flipTarget) {
+        return assign({}, state, {
+          containers: assign({}, state.containers, _defineProperty({}, action.target, assign({}, flipTarget, { isHorizontal: !flipTarget.isHorizontal })))
+        });
+      } else {
+        return state;
+      }
+    case 'RESET_CONTAINERS':
       return assign({}, state, {
-        status: action.status
+        index: 1,
+        containers: {}
       });
+    case 'SET_SELECTED_INDEX':
+      if (state.containers[action.selectedIndex]) {
+        return assign({}, state, {
+          selectedIndex: action.selectedIndex
+        });
+      } else {
+        return state;
+      }
     default:
       return state;
   }
 }
-// []
+
 module.exports = appReducer;
 
-},{"object-assign":35}]},{},[191]);
+},{"object-assign":35}]},{},[190]);

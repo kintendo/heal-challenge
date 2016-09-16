@@ -11,7 +11,7 @@ class Parent extends Component {
       autoBind(this);
   }
 
-  renderChildren(numOfChildren) {
+  renderChildren(nodes) {
     let children = [];
     for(let i = 0; i < numOfChildren; i++) {
       children.push(<Child key={`child-${i}`}/>);
@@ -23,18 +23,17 @@ class Parent extends Component {
     const {children, isHorizontal} = this.props;
     return (
       <div className={`parent ${isHorizontal ? 'horizontal' : ''}`}>
-        {this.renderChildren(this.props.children)}
       </div>
     );
   }
 }
 
 Parent.propTypes = {
-  children: PropTypes.number,
+  nodes: PropTypes.number,
   isHorizontal: PropTypes.bool
 };
 Parent.defaultProps = {
-  chilren: 0,
+  nodes: [],
   isHorizontal: false
 };
 module.exports = Parent;

@@ -27,6 +27,24 @@ body {
     max-width: 180px;
     max-height: 50px; }
 
+.button-group {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -moz-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  -moz-justify-content: center;
+  justify-content: center; }
+
 .container-area {
   margin-top: 40px;
   margin-bottom: 40px;
@@ -61,8 +79,12 @@ body {
     -moz-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column; }
+  .parent.selected {
+    border-color: #f05a6d; }
 
 .child {
   border: 1px solid white;
   height: 98%;
   width: 98%; }
+  .child.selected {
+    border-color: #f05a6d; }

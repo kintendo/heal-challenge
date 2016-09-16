@@ -1,8 +1,8 @@
 const React = require('react');
 
-function Child () {
+function Child ({className}) {
   return (
-    <div className='child'>
+    <div className={`child ${className || ''}`}>
     </div>
   );
 }
